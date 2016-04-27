@@ -1,0 +1,12 @@
+<div class="container" ng-controller="homeCtrl">
+    <h2>Nombre usuario {{message}}</h2>
+    <h4>Topics:</h4>
+    <ul id="tag-cloud" >
+        <li ng-repeat="topic in topics" class="tag-cloud tag-cloud-info">
+            {{topic.topic_name}}
+
+        </li>
+    </ul>
+
+    <h3>Mensajes</h3>
+</div>
