@@ -1,12 +1,30 @@
 <div class="container" ng-controller="homeCtrl">
     <h2>Nombre usuario {{message}}</h2>
     <h4>Topics:</h4>
-    <ul id="tag-cloud" >
-        <li ng-repeat="topic in topics" class="tag-cloud tag-cloud-info">
-            {{topic.topic_name}}
+        <form class="form-inline">
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <select class="form-control" ng-model="subTopic.topic_id">
+                        <option ng-repeat="topic in sub_topics" value="{{topic.id}}">{{topic.topic_name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-xs-1">
+                <button class="btn pull-right" ng-click="AddTopic()">Add</button>
+            </div>
 
-        </li>
-    </ul>
+        </form>
+    <div class="col-xs-8">
+        <ul id="tag-cloud" >
+            <li ng-repeat="topic in topics" class="tag-cloud tag-cloud-info">
+                {{topic.topic_name}}
+            </li>
+        </ul>
+    </div>
+    <div class="col-xs-12">
+        <h3>Mensajes</h3>
+        <a href="#/new/message" class="btn btn-info">Crear nuevo mensaje</a>
 
-    <h3>Mensajes</h3>
+    </div>
+
 </div>

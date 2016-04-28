@@ -9,10 +9,23 @@ myApp.config(function($routeProvider){
     .when('/home', {
         templateUrl: 'templates/home.html',
         controller: 'homeCtrl'
+    }).
+    when('/new/message', {
+        templateUrl: 'templates/newMessage.html',
+        controller: 'newMessageCtrl'
+    }).
+    otherwise({
+        redirectTo: '/'
     });
 });
 
 myApp.value('myVars', {'user_id': undefined});
+
+var verifyLogin = function(myVars, $location){
+    if (!myVars.user_id) {
+        $location.path("/");
+    }
+}
 
 myApp.controller('loginCtrl', ['myVars', '$scope', '$location', '$http', function (myVars, $scope, $location, $http) {
     $scope.message = 'login';
@@ -23,7 +36,6 @@ myApp.controller('loginCtrl', ['myVars', '$scope', '$location', '$http', functio
       $http.get('/login/'+user_name).success(function(response){
             // REDIRECT TO HOME
             myVars.user_id = response;
-            console.log('user_id: ', myVars);
             $location.path("/home");
       });
 
@@ -31,17 +43,62 @@ myApp.controller('loginCtrl', ['myVars', '$scope', '$location', '$http', functio
 }]);
 
 myApp.controller('homeCtrl', ['myVars','$scope', '$location', '$http', function (myVars, $scope, $location, $http) {
-    if (!myVars.user_id) {
-        $location.path("/");
+
+    var refreshMyTopics = function(user_id){
+        $http.get('/topic/'+user_id).success(function(response){
+            $scope.topics = response;
+        });
     }
 
+    var refreshSubTopic = function(user_id){
+        $http.get('/topic/subscribe/'+user_id).success(function(response){
+            $scope.sub_topics = response;
+            refreshMyTopics(user_id);
+        });
+    }
+
+
+    verifyLogin(myVars, $location);
     $scope.message = myVars.user_id;
     var user_id = myVars.user_id;
-    $http.get('/topics/'+user_id).success(function(response){
-        console.log('response ',response);
+
+    refreshMyTopics(user_id);
+    refreshSubTopic(user_id);
+
+    $scope.AddTopic = function(){
+        var subTopic = {
+            'user_id': user_id,
+            'topic_id': $scope.subTopic.topic_id
+        };
+
+        $http.post('/topic/subscribe', subTopic).success(function(response){
+            console.log(response);
+            if(response) refreshSubTopic(user_id);
+        });
+    };
+}]);
+
+myApp.controller('newMessageCtrl',  ['myVars', '$scope', '$location', '$http', function(myVars, $scope, $location, $http){
+    verifyLogin(myVars, $location);
+    var user_id = myVars.user_id;
+    $http.get('/topic/'+user_id).success(function(response){
         $scope.topics = response;
     });
 
-
-
+    $scope.newMessage = function() {
+        var message = {
+            'topic_id': parseInt($scope.newMessage.topic),
+            'user_id': user_id,
+            'mensaje': $scope.newMessage.message,
+            'title': $scope.newMessage.title
+        }
+        console.log('message: ', message);
+        $http.post('/new_message', message).success(function(response){
+            if(response){
+                alert('Exito!');
+                $scope.newMessage = '';
+                $location.path("/home");
+            }
+        });
+    }
 }]);

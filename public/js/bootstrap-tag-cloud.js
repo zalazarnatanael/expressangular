@@ -1,5 +1,5 @@
 /* =========================================================
- * bootstrap-tag-cloud.js 
+ * bootstrap-tag-cloud.js
  * http://www.collectivepush.com/plugins/bootstrap/
  * =========================================================
  * Copyright 2012 Collective Push
@@ -24,7 +24,6 @@
  * ========================================================= */
 
 // Add listener for tag removals
-$(document).on('click','.tag-cloud', function removeTag(){ $(this).remove(); });
 
 
 // Find out which containers we have on this document and setup proper bindings
@@ -39,8 +38,8 @@ $(document).ready(function() {
 	if ( $("#tag-warning").length > 0 ) { addTagBindings('#tag-warning'); }
 
 	if ( $("#tag-danger").length > 0 ) { addTagBindings('#tag-danger');	}
-	
-	if ( $("#tag-inverse").length > 0 ) { addTagBindings('#tag-inverse');	}				
+
+	if ( $("#tag-inverse").length > 0 ) { addTagBindings('#tag-inverse');	}
 
 });
 
@@ -51,7 +50,7 @@ function addTagBindings(id) {
 
 		$(id + ' > button').click(function(){ addTag(id); });
 
-		$(id + ' > input').keyup(function (e) {  if (e.keyCode == 13) { addTag(id); }  });	
+		$(id + ' > input').keyup(function (e) {  if (e.keyCode == 13) { addTag(id); }  });
 
 }
 
@@ -59,12 +58,12 @@ function addTagBindings(id) {
 // Dynamically adjust append code based on what type of tagClass
 // need to be applied when the tag element is added to the dom
 function addTag(id) {
-	
+
 	var Tag = $(id + ' > input').val();
-	
+
 	var tagClass = '';
 
-	// Setup our class based on what type of container we have everything inside 
+	// Setup our class based on what type of container we have everything inside
 	if (id == '#tag') { tagClass = 'tag-cloud'; }
 	if (id == '#tag-info') { tagClass = 'tag-cloud tag-cloud-info'; }
 	if (id == '#tag-success') { tagClass = 'tag-cloud tag-cloud-success'; }
@@ -75,12 +74,12 @@ function addTag(id) {
 	// If there is no value in the input field then don't do anything
 	if (Tag != '') {
 
-		// Append tag with proper styling into the tag cloud 
+		// Append tag with proper styling into the tag cloud
 		$('<li class="'+tagClass+'">'+Tag+'</li>').appendTo("#tag-cloud");
 
 		// Clear input back to nothing
-		$(id + ' > input').val('');		
+		$(id + ' > input').val('');
 
-	}	
+	}
 
 }

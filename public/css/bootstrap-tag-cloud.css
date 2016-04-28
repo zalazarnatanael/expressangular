@@ -1,5 +1,4 @@
 #tag-cloud {
-	width: 285px;
 	margin-left: 0;
 }
 .tag-cloud {
@@ -8,7 +7,7 @@
 	   -moz-border-radius: 3px;
 	        border-radius: 3px;
     color: #FFFFFF;
-    cursor: pointer;
+    cursor: default;
     display: inline-block;
     font-size: 11.844px;
     font-weight: bold;
@@ -20,7 +19,6 @@
 }
 .tag-cloud:after {
     color: #000000;
-    content: " ×";
     font-size: 20px;
     font-weight: bold;
     line-height: 16px;
