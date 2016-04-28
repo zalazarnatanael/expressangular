@@ -54,7 +54,7 @@ app.get('/topic/:user_id', function(req, res){
 
 app.get('/topic/subscribe/:user_id', function(req, res){
     var user_id = req.params.user_id;
-    connection.query("SELECT * FROM topic WHERE id NOT IN (SELECT id FROM user_topic LEFT JOIN topic ON topic_id = id WHERE user_id= :user_id)", {'user_id': user_id}, function(err, rows){
+    connection.query("SELECT t.id, t.topic_name, ut.topic_id FROM topic t LEFT JOIN user_topic ut ON ut.topic_id = t.id AND ut.user_id = :user_id WHERE ut.topic_id IS NULL", {'user_id': user_id}, function(err, rows){
         res.json(rows);
     });
 });
@@ -81,8 +81,12 @@ app.post('/new_message', function(req, res){
     });
 });
 
-app.get('/get_messages', function(req, res){
-
+app.get('/get_topics/:user_id', function(req, res){
+    var user_id = req.params.user_id;
+    connection.query("SELECT m.id, t.topic_name, m.title, m.mensaje, m.message_id, m.user_id, u.user_name FROM message m INNER JOIN user_topic ut ON ut.user_id=:user_id AND ut.topic_id = m.topic_id INNER JOIN topic t ON t.id = m.topic_id LEFT JOIN user u ON u.id = m.user_id", {'user_id': user_id}, function(err,rows){
+        if (err) throw err;
+        res.json(rows);
+    });
 });
 
 app.listen(3000);

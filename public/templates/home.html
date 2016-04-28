@@ -24,7 +24,18 @@
     <div class="col-xs-12">
         <h3>Mensajes</h3>
         <a href="#/new/message" class="btn btn-info">Crear nuevo mensaje</a>
-
+        <div class="gap"></div>
+        <div ng-repeat="message in messages">
+            <div class="post">
+                <div class="post-content">
+                    <p class="tag-cloud tag-cloud-warning pull-right">{{message.topic_name}}</p>
+                    <h3>{{message.title}}</h3>
+                    <p>{{message.mensaje}}</p>
+                </div>
+            </div>
+            <div class="gap-small"></div>
+        </div>
     </div>
+
 
 </div>

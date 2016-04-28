@@ -54,16 +54,25 @@ myApp.controller('homeCtrl', ['myVars','$scope', '$location', '$http', function 
         $http.get('/topic/subscribe/'+user_id).success(function(response){
             $scope.sub_topics = response;
             refreshMyTopics(user_id);
+            refreshTopics(user_id);
         });
     }
 
+    var refreshTopics = function(user_id){
+        $http.get('/get_topics/'+user_id). success(function(response){
+            console.log(response);
+            $scope.messages = response;
+        });
+    }
 
     verifyLogin(myVars, $location);
+
     $scope.message = myVars.user_id;
     var user_id = myVars.user_id;
 
     refreshMyTopics(user_id);
     refreshSubTopic(user_id);
+    refreshTopics(user_id);
 
     $scope.AddTopic = function(){
         var subTopic = {
@@ -76,6 +85,8 @@ myApp.controller('homeCtrl', ['myVars','$scope', '$location', '$http', function 
             if(response) refreshSubTopic(user_id);
         });
     };
+
+
 }]);
 
 myApp.controller('newMessageCtrl',  ['myVars', '$scope', '$location', '$http', function(myVars, $scope, $location, $http){
