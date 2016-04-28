@@ -60,7 +60,6 @@ myApp.controller('homeCtrl', ['myVars','$scope', '$location', '$http', function 
 
     var refreshTopics = function(user_id){
         $http.get('/get_topics/'+user_id). success(function(response){
-            console.log(response);
             $scope.messages = response;
         });
     }
@@ -68,6 +67,7 @@ myApp.controller('homeCtrl', ['myVars','$scope', '$location', '$http', function 
     verifyLogin(myVars, $location);
 
     $scope.message = myVars.user_id;
+    $scope.comment_active = false;
     var user_id = myVars.user_id;
 
     refreshMyTopics(user_id);
@@ -81,10 +81,13 @@ myApp.controller('homeCtrl', ['myVars','$scope', '$location', '$http', function 
         };
 
         $http.post('/topic/subscribe', subTopic).success(function(response){
-            console.log(response);
             if(response) refreshSubTopic(user_id);
         });
     };
+
+    $scope.AddComment = function(){
+        $scope.comment_active = true;
+    }
 
 
 }]);
@@ -103,7 +106,6 @@ myApp.controller('newMessageCtrl',  ['myVars', '$scope', '$location', '$http', f
             'mensaje': $scope.newMessage.message,
             'title': $scope.newMessage.title
         }
-        console.log('message: ', message);
         $http.post('/new_message', message).success(function(response){
             if(response){
                 alert('Exito!');

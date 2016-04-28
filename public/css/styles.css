@@ -33,7 +33,7 @@ h1{
     width:0px;
 }
 
-.post{
+.post, .comment{
     background: #fff;
     border-radius: 3px;
     padding: 10px;
@@ -52,6 +52,11 @@ h1{
 .post .post-content p {
       margin: 0;
  }
+
+ .comment{
+     display: flex;
+ }
+
 .gap {
     display: block;
     position: relative;
@@ -93,4 +98,22 @@ h1{
     border: 0;
     border-top: 1px solid #ededed;
     border-bottom: 1px solid #fff;
+}
+
+.animate-show {
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px;
+  border: 1px solid black;
+  background: white;
+}
+
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+  transition: all linear 0.5s;
+}
+
+.animate-show.ng-hide {
+  line-height: 0;
+  opacity: 0;
+  padding: 0 10px;
 }

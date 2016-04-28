@@ -29,8 +29,18 @@
             <div class="post">
                 <div class="post-content">
                     <p class="tag-cloud tag-cloud-warning pull-right">{{message.topic_name}}</p>
+                    <button class="btn btn-info pull-right" style="margin-right: 10px;" ng-click="AddComment()">Responder</button>
                     <h3>{{message.title}}</h3>
                     <p>{{message.mensaje}}</p>
+                </div>
+            </div>
+            <div class="comment animate-show" ng-show="comment_active">
+                <div class="col-xs-11">
+                    <input class="form-control input-sm" id="inputsm" type="text" placeholder="Respuesta ... ">
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-primary pull-right">Enviar</button>
+
                 </div>
             </div>
             <div class="gap-small"></div>
