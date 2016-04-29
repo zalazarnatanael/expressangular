@@ -24,6 +24,10 @@ h1{
   padding: 10px;
 }
 
+.margin-button{
+    margin: 0 10px 0 0;
+}
+
 
 .wrapper-login::before{
     content:'';
@@ -41,6 +45,10 @@ h1{
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
     -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+
+ul li{
+    list-style-type: none;
 }
 
 .post .post-content h3 {

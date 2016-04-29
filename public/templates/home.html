@@ -25,27 +25,38 @@
         <h3>Mensajes</h3>
         <a href="#/new/message" class="btn btn-info">Crear nuevo mensaje</a>
         <div class="gap"></div>
-        <div ng-repeat="message in messages">
-            <div class="post">
-                <div class="post-content">
-                    <p class="tag-cloud tag-cloud-warning pull-right">{{message.topic_name}}</p>
-                    <button class="btn btn-info pull-right" style="margin-right: 10px;" ng-click="AddComment()">Responder</button>
-                    <h3>{{message.title}}</h3>
-                    <p>{{message.mensaje}}</p>
-                </div>
-            </div>
-            <div class="comment animate-show" ng-show="comment_active">
-                <div class="col-xs-11">
-                    <input class="form-control input-sm" id="inputsm" type="text" placeholder="Respuesta ... ">
-                </div>
-                <div class="col-xs-1">
-                    <button class="btn btn-primary pull-right">Enviar</button>
+    </div>
 
-                </div>
+    <div class="col-xs-12">
+        <div ng-controller="TreeController">
+            <div ng-repeat="data in tree track by $index" ng-include="'tree_item_renderer.html'"></li>
             </div>
-            <div class="gap-small"></div>
         </div>
+
     </div>
 
 
-</div>
+    <script type="text/ng-template"  id="tree_item_renderer.html">
+        <div class="post">
+            <div class="post-content">
+                <p class="tag-cloud tag-cloud-warning pull-right">{{data.topic_name}}</p>
+                <button class="btn btn-info pull-right" style="margin-right: 10px;" ng-click="ShowAddComment(data)">Responder</button>
+                <h3>{{data.title}}</h3>
+                <p>{{data.mensaje}}</p>
+            </div>
+        </div>
+        <div class="comment" ng-show="data.comment_active">
+            <div class="col-xs-10">
+                <input class="form-control input-sm" ng-model="new_comment.comment" type="text" placeholder="Respuesta ... ">
+            </div>
+            <div class="col-xs-2">
+                <button class="btn btn-default pull-right" ng-click="CloseComment(data)">Cerrar</button>
+                <button class="btn btn-primary pull-right margin-button" ng-click="AddComment(new_comment.comment, data)">Enviar</button>
+            </div>
+        </div>
+        <div class="gap-small"></div>
+
+        <ul>
+            <li ng-repeat="data in data.nodes" ng-include="'tree_item_renderer.html'"></li>
+        </ul>
+    </script>
