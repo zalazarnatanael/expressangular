@@ -24,20 +24,79 @@ myApp.config(function($routeProvider){
     });
 });
 
-myApp.value('myVars', {'user_id': undefined});
+myApp.value('user_data', {});
 
-var verifyLogin = function(myVars, $location){
-    if (!myVars.user_id) {
+var verifyLogin = function(user_data, $location){
+    if (!user_data.id) {
         $location.path("/");
     }
-}
+};
 
-myApp.controller("TreeController", ['$scope', '$http', 'myVars', function($scope, $http, myVars) {
-    var user_id = myVars.user_id;
+myApp.controller('loginCtrl', ['user_data', '$scope', '$location', '$http', '_', function (user_data, $scope, $location, $http, _) {
+    // EVENT CLICK LOGIN
+    $scope.login = function($event) {
+      var user_name = $('#username').val();
+      $http.get('/login/'+user_name).success(function(response){
+            // REDIRECT TO HOME
+            _.extend(user_data, response);
+            $location.path("/home");
+      });
+    };
+}]);
+
+myApp.controller('homeCtrl', ['user_data','$scope', '$location', '$http', '_', function (user_data, $scope, $location, $http, _) {
+
+    var refreshMyTopics = function(user_id){
+        $http.get('/topic/'+user_id).success(function(response){
+            $scope.topics = response;
+        });
+    };
+
+    var refreshSubTopic = function(user_id){
+        $http.get('/topic/subscribe/'+user_id).success(function(response){
+            $scope.sub_topics = response;
+
+            refreshMyTopics(user_id);
+            refreshTopics(user_id);
+        });
+    };
+
+    var refreshTopics = function(user_id){
+        $http.get('/get_messages/'+user_id). success(function(response){
+            $scope.messages = response;
+        });
+    };
+
+    verifyLogin(user_data, $location);
+
+    $scope.username = user_data.name;
+    $scope.comment_active = false;
+    var user_id = user_data.id;
+
+    refreshMyTopics(user_id);
+    refreshSubTopic(user_id);
+    refreshTopics(user_id);
+
+    $scope.AddTopic = function(){
+        var subTopic = {
+            'user_id': user_id,
+            'topic_id': $scope.subTopic.topic_id
+        };
+
+        $http.post('/topic/subscribe', subTopic).success(function(response){
+            if(response) {
+                refreshSubTopic(user_id);
+                $scope.TreeController.refreshMessages(user_id,$http,$scope);
+            }
+        });
+    };
+}]);
+
+myApp.controller("TreeController", ['$scope', '$http', 'user_data', function($scope, $http, user_data) {
+    var user_id = user_data.id;
 
     var refreshMessages = function(user_id, $http, $scope) {
         $http.get('/get_messages/'+user_id). success(function(response){
-            console.log('response: ', response);
             var tree = [];
             var auxTree = {}; //Keeps track of nodes using id as key, for fast lookup
 
@@ -61,8 +120,7 @@ myApp.controller("TreeController", ['$scope', '$http', 'myVars', function($scope
                     parentNode.nodes.push(datum);
                 }
             }
-
-            _.map(auxTree, function(root){
+            _.forEach(auxTree, function(root){
                 if(_.isNull(root.message_id)) {
                     _.extend(root, {'comment_active': false});
                     tree.push(root);
@@ -77,97 +135,35 @@ myApp.controller("TreeController", ['$scope', '$http', 'myVars', function($scope
 
     $scope.ShowAddComment = function(branch){
         branch.comment_active = !branch.comment_active;
-    }
+    };
 
     $scope.AddComment = function(message, branch){
         branch.comment_active = false;
 
-        var message = {
+        var data = {
             'topic_id': branch.topic_id,
             'user_id': user_id,
             'mensaje': message,
             'title': branch.title,
             'message_id': branch.id
-        }
-        $http.post('/new_message', message).success(function(response){
+        };
+        $http.post('/new_message', data).success(function(response){
             if(response){
                 refreshMessages(user_id,$http,$scope);
                 message = '';
             }
         });
-    }
+    };
 
     $scope.CloseComment = function(branch){
         branch.comment_active = false;
-    }
-}]);
-
-myApp.controller('loginCtrl', ['myVars', '$scope', '$location', '$http', function (myVars, $scope, $location, $http) {
-    $scope.message = 'login';
-
-    // EVENT CLICK LOGIN
-    $scope.login = function($event) {
-      var user_name = $('#username').val();
-      $http.get('/login/'+user_name).success(function(response){
-            // REDIRECT TO HOME
-            myVars.user_id = response;
-            $location.path("/home");
-      });
-
     };
 }]);
 
-myApp.controller('homeCtrl', ['myVars','$scope', '$location', '$http', '_', function (myVars, $scope, $location, $http, _) {
-
-    var refreshMyTopics = function(user_id){
-        $http.get('/topic/'+user_id).success(function(response){
-            $scope.topics = response;
-        });
-    }
-
-    var refreshSubTopic = function(user_id){
-        $http.get('/topic/subscribe/'+user_id).success(function(response){
-            $scope.sub_topics = response;
-
-            refreshMyTopics(user_id);
-            refreshTopics(user_id);
-        });
-    }
-
-    var refreshTopics = function(user_id){
-        $http.get('/get_messages/'+user_id). success(function(response){
-            $scope.messages = response;
-        });
-    }
-
-    verifyLogin(myVars, $location);
-
-    $scope.message = myVars.user_id;
-    $scope.comment_active = false;
-    var user_id = myVars.user_id;
-
-    refreshMyTopics(user_id);
-    refreshSubTopic(user_id);
-    refreshTopics(user_id);
-
-    $scope.AddTopic = function(){
-        var subTopic = {
-            'user_id': user_id,
-            'topic_id': $scope.subTopic.topic_id
-        };
-
-        $http.post('/topic/subscribe', subTopic).success(function(response){
-            if(response) {
-                refreshSubTopic(user_id);
-                $scope.TreeController.refreshMessages(user_id,$http,$scope)
-            }
-        });
-    };
-}]);
-
-myApp.controller('newMessageCtrl',  ['myVars', '$scope', '$location', '$http', function(myVars, $scope, $location, $http){
-    verifyLogin(myVars, $location);
-    var user_id = myVars.user_id;
+myApp.controller('newMessageCtrl',  ['user_data', '$scope', '$location', '$http', function(user_data, $scope, $location, $http){
+    verifyLogin(user_data, $location);
+    var user_id = user_data.id;
+    $scope.username = user_data.name;
     $http.get('/topic/'+user_id).success(function(response){
         $scope.topics = response;
     });
@@ -179,12 +175,12 @@ myApp.controller('newMessageCtrl',  ['myVars', '$scope', '$location', '$http', f
             'mensaje': $scope.newMessage.message,
             'title': $scope.newMessage.title,
             'message_id': null
-        }
+        };
         $http.post('/new_message', message).success(function(response){
             if(response){
                 $scope.newMessage = '';
                 $location.path("/home");
             }
         });
-    }
+    };
 }]);

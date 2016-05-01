@@ -1,30 +1,35 @@
 <div class="container">
-    <div class="form-horizontal">
+    <h2>Nombre usuario {{username}}</h2>
+    <hr>
+    <div class="gap-small"></div>
+    <div class="row">
+      <div class="form-horizontal">
         <div class="form-group">
-            <label class="control-label col-xs-2">Titulo</label>
-            <div class="col-xs-4">
-                <input class="form-control" placeholder="titulo" ng-model="newMessage.title">
-            </div>
-            <label class="control-label col-xs-1">Topic</label>
-            <div class="col-xs-4">
-                <select class="form-control" ng-model="newMessage.topic">
-                    <option ng-repeat="topic in topics" value="{{topic.id}}">{{topic.topic_name}}</option>
-                </select>
-            </div>
+          <label class="control-label col-xs-2">Titulo</label>
+          <div class="col-xs-4">
+            <input class="form-control" placeholder="titulo" ng-model="newMessage.title">
+          </div>
+          <label class="control-label col-xs-1">Topic</label>
+          <div class="col-xs-4">
+            <select class="form-control" ng-model="newMessage.topic">
+              <option value="" disabled selected>Elija un topic</option>
+              <option ng-repeat="topic in topics" value="{{topic.id}}">{{topic.topic_name}}</option>
+            </select>
+          </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-xs-2">Mensaje</label>
-            <div class="col-xs-9">
-                <textarea class="form-control" rows="5" ng-model="newMessage.message"></textarea>
-            </div>
+          <label class="control-label col-xs-2">Mensaje</label>
+          <div class="col-xs-9">
+            <textarea class="form-control" rows="5" ng-model="newMessage.message"></textarea>
+          </div>
         </div>
 
         <div class="form-group">
-            <div class="col-xs-offset-2 col-xs-10">
-                <input type="submit" class="btn btn-primary" value="Enviar" ng-click="newMessage()">
-                <a href="#/home" class="btn btn-default">Volver</a>
-            </div>
+          <div class="col-xs-offset-2 col-xs-10">
+            <input type="submit" class="btn btn-primary" value="Enviar" ng-click="newMessage()">
+            <a href="#/home" class="btn btn-default">Volver</a>
+          </div>
         </div>
+      </div>
     </div>
-
 </div>

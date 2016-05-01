@@ -13,14 +13,14 @@ h1{
 .wrapper-login{
   width: 650px;
   margin: 0 auto;
-  box-shadow: 5px 5px 5px #555;
+  box-shadow: 0px 1px 3px 0px #555;
   background: #fff;
-  border-radius: 15px;
+  border-radius: 3px;
   padding: 10px;
+  margin-top: 30px;
 }
 
 .container-login{
-  border-bottom: thin solid #ccc;
   padding: 10px;
 }
 
@@ -57,8 +57,12 @@ ul li{
       font-size: 18px;
 }
 
-.post .post-content p {
-      margin: 0;
+select{
+  width: calc(100% - 10px) !important;
+}
+
+ .post .post-content p:first-child{
+   margin-right: 10px;
  }
 
  .comment{
