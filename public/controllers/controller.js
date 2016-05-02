@@ -44,7 +44,7 @@ myApp.controller('loginCtrl', ['user_data', '$scope', '$location', '$http', '_',
     };
 }]);
 
-myApp.controller('homeCtrl', ['user_data','$scope', '$location', '$http', '_', function (user_data, $scope, $location, $http, _) {
+myApp.controller('homeCtrl', ['user_data','$scope', '$rootScope','$location', '$http', '_', function (user_data, $scope, $rootScope, $location, $http, _) {
 
     var refreshMyTopics = function(user_id){
         $http.get('/topic/'+user_id).success(function(response){
@@ -86,13 +86,13 @@ myApp.controller('homeCtrl', ['user_data','$scope', '$location', '$http', '_', f
         $http.post('/topic/subscribe', subTopic).success(function(response){
             if(response) {
                 refreshSubTopic(user_id);
-                $scope.TreeController.refreshMessages(user_id,$http,$scope);
+                $rootScope.$emit('refMessages', user_id);
             }
         });
     };
 }]);
 
-myApp.controller("TreeController", ['$scope', '$http', 'user_data', function($scope, $http, user_data) {
+myApp.controller("TreeController", ['$scope','$rootScope' ,'$http', 'user_data', function($scope, $rootScope, $http, user_data) {
     var user_id = user_data.id;
 
     var refreshMessages = function(user_id, $http, $scope) {
@@ -132,6 +132,9 @@ myApp.controller("TreeController", ['$scope', '$http', 'user_data', function($sc
     };
 
     refreshMessages(user_id,$http,$scope);
+    $rootScope.$on('refMessages', function(event, user_id) {
+        refreshMessages(user_id,$http,$scope);
+      });
 
     $scope.ShowAddComment = function(branch){
         branch.comment_active = !branch.comment_active;
